@@ -24,121 +24,191 @@ st.markdown("""
     
     :root {
         --bg-primary: #0a0e1a;
+        --bg-secondary: #111827;
+        --bg-tertiary: #1a2234;
+        --bg-card: rgba(26, 34, 52, 0.8);
         --gold-primary: #c9a227;
         --gold-light: #e8c547;
         --text-primary: #f8fafc;
         --text-secondary: #94a3b8;
+        --text-tertiary: #64748b;
         --border-subtle: rgba(148, 163, 184, 0.1);
+        --radius-lg: 12px;
+        --radius-md: 8px;
     }
 
     .stApp {
-        background: #0a0e1a;
+        background: var(--bg-primary);
         background-image: 
             radial-gradient(ellipse at 20% 0%, rgba(30, 58, 95, 0.3) 0%, transparent 50%),
             radial-gradient(ellipse at 80% 100%, rgba(201, 162, 39, 0.1) 0%, transparent 50%);
-        color: #f8fafc;
+        color: var(--text-primary);
     }
 
-    /* Typography */
-    h1, h2, h3, .section-title {
-        font-family: 'Playfair Display', serif !important;
+    /* Sidebar Styling */
+    section[data-testid="stSidebar"] {
+        background: rgba(17, 24, 39, 0.95);
+        border-right: 1px solid var(--border-subtle);
     }
     
-    body {
-        font-family: 'Inter', sans-serif;
+    section[data-testid="stSidebar"] .stMarkdown h3 {
+        color: var(--text-secondary);
+        font-size: 0.8rem !important;
+        text-transform: uppercase;
+        letter-spacing: 0.1rem;
+        margin-top: 1.5rem;
+        margin-bottom: 0.5rem;
     }
 
-    /* Cards */
-    .css-1r6p8d1, .stMarkdownContainer {
-        color: #f8fafc;
-    }
-    
-    .metric-card {
-        background: rgba(26, 34, 52, 0.8);
-        border: 1px solid rgba(148, 163, 184, 0.1);
-        border-radius: 12px;
+    /* Cards & Containers */
+    .dashboard-card {
+        background: var(--bg-card);
+        border: 1px solid var(--border-subtle);
+        border-radius: var(--radius-lg);
         padding: 20px;
         margin-bottom: 15px;
         backdrop-filter: blur(10px);
     }
     
+    .metric-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+        margin-bottom: 15px;
+    }
+    
+    .metric-item {
+        background: var(--bg-secondary);
+        border-radius: var(--radius-md);
+        padding: 12px;
+        text-align: center;
+        border: 1px solid var(--border-subtle);
+    }
+    
     .metric-label {
-        font-size: 0.7rem;
-        color: #94a3b8;
+        font-size: 0.65rem;
+        color: var(--text-tertiary);
         text-transform: uppercase;
         letter-spacing: 0.05rem;
-        margin-bottom: 5px;
+        display: block;
+        margin-bottom: 4px;
     }
     
     .metric-value {
-        font-size: 1.25rem;
+        font-size: 1rem;
         font-weight: 700;
-        color: #ffffff;
+        color: var(--text-primary);
     }
 
-    /* Sidebar Customization */
-    section[data-testid="stSidebar"] {
-        background: rgba(17, 24, 39, 0.95);
-        border-right: 1px solid rgba(148, 163, 184, 0.1);
+    /* Welcome/Landing Page */
+    .welcome-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: 40px 20px;
     }
-
-    /* Brief Viewer */
-    .brief-viewer {
-        background: #ffffff;
-        color: #2e3338;
-        padding: 40px;
-        border-radius: 12px;
-        font-family: 'Playfair Display', serif;
-        line-height: 1.7;
-        border-left: 8px solid #c9a227;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-        max-height: 600px;
-        overflow-y: auto;
+    
+    .logo-container {
+        width: 80px;
+        height: 80px;
+        color: var(--gold-primary);
+        margin-bottom: 24px;
+        opacity: 0.9;
+    }
+    
+    .landing-title {
+        font-family: 'Playfair Display', serif !important;
+        font-size: 2.5rem !important;
+        margin-bottom: 8px !important;
+    }
+    
+    .landing-subtitle {
+        color: var(--text-secondary);
+        max-width: 500px;
+        margin-bottom: 32px;
         font-size: 1.1rem;
     }
-    
-    .brief-segment {
-        cursor: pointer;
-        padding: 2px 4px;
-        border-radius: 4px;
-        transition: all 0.2s ease;
-    }
-    
-    .brief-segment:hover {
-        background: rgba(201, 162, 39, 0.2);
-    }
-    
-    .brief-segment.critical {
-        background: rgba(239, 64, 64, 0.15);
-        border-bottom: 2px solid #ef4444;
-    }
-    
-    .brief-segment.caution {
-        background: rgba(245, 158, 11, 0.15);
-        border-bottom: 2px solid #f59e0b;
-    }
 
-    /* Sample Case Cards */
-    .sample-card {
-        background: rgba(26, 34, 52, 0.8);
-        border: 1px solid rgba(148, 163, 184, 0.2);
-        border-radius: 12px;
-        padding: 15px;
-        cursor: pointer;
+    /* Sample Cards */
+    .sample-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 15px;
+        width: 100%;
+        max-width: 1000px;
+        margin-top: 40px;
+    }
+    
+    .sample-card-ui {
+        background: var(--bg-card);
+        border: 1px solid var(--border-subtle);
+        border-radius: var(--radius-lg);
+        padding: 20px;
         transition: all 0.3s ease;
         text-align: left;
     }
     
-    .sample-card:hover {
-        border-color: #c9a227;
+    .sample-card-ui:hover {
+        border-color: var(--gold-primary);
         transform: translateY(-5px);
         box-shadow: 0 0 20px rgba(201, 162, 39, 0.15);
     }
+    
+    .sample-header {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 12px;
+    }
+    
+    .sample-docket {
+        font-size: 0.75rem;
+        color: var(--gold-primary);
+        font-weight: 700;
+    }
+    
+    .sample-posture-badge {
+        font-size: 0.65rem;
+        background: rgba(201, 162, 39, 0.1);
+        color: var(--gold-primary);
+        padding: 2px 8px;
+        border-radius: 4px;
+        text-transform: uppercase;
+        font-weight: 600;
+    }
 
+    .sample-name {
+        font-family: 'Playfair Display', serif;
+        font-size: 1.2rem;
+        margin-bottom: 4px;
+    }
+    
+    .sample-issue-line {
+        font-size: 0.8rem;
+        color: var(--text-secondary);
+        margin-bottom: 12px;
+    }
+
+    /* Justice Grid */
+    .justice-btn-container {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+    }
+    
+    /* Global Typography Fixes */
+    h1, h2, h3, .section-title {
+        font-family: 'Playfair Display', serif !important;
+    }
+    body {
+        font-family: 'Inter', sans-serif;
+    }
+    
     /* Result Indicators */
-    .indicator-high { color: #ef4444; font-weight: 700; }
-    .indicator-medium { color: #f59e0b; font-weight: 700; }
-    .indicator-low { color: #22c55e; font-weight: 700; }
+    .indicator-high { color: #ef4444 !important; font-weight: 700; }
+    .indicator-medium { color: #f59e0b !important; font-weight: 700; }
+    .indicator-low { color: #22c55e !important; font-weight: 700; }
 </style>
 """, unsafe_allow_html=True)
 
@@ -306,23 +376,45 @@ def extract_pdf_text(uploaded_file):
 def render_sidebar_dashboard(ans):
     with st.sidebar:
         add_vertical_space(1)
-        st.markdown("### Executive Dashboard")
         
-        col1, col2 = st.columns(2)
-        with col1:
-            st.markdown(f'<div class="metric-card"><div class="metric-label">Input Tier</div><div class="metric-value">{ans["tier"]}</div></div>', unsafe_allow_html=True)
-            st.markdown(f'<div class="metric-card"><div class="metric-label">DIG Risk</div><div class="metric-value">{ans["digRisk"]}</div></div>', unsafe_allow_html=True)
-        with col2:
-            st.markdown(f'<div class="metric-card"><div class="metric-label">Posture</div><div class="metric-value">{ans["posture"].upper()}</div></div>', unsafe_allow_html=True)
-            risk_class = "indicator-high" if ans["riskLevel"] == "CRITICAL" else "indicator-medium"
-            st.markdown(f'<div class="metric-card"><div class="metric-label">Risk Level</div><div class="metric-value {risk_class}">{ans["riskLevel"]}</div></div>', unsafe_allow_html=True)
+        # Executive Dashboard Card
+        st.markdown(f"""
+        <div class="dashboard-card">
+            <h3 style="margin-top:0;">Executive Dashboard</h3>
+            <div class="metric-grid">
+                <div class="metric-item">
+                    <span class="metric-label">Input Tier</span>
+                    <span class="metric-value">{ans["tier"]}</span>
+                </div>
+                <div class="metric-item">
+                    <span class="metric-label">Posture</span>
+                    <span class="metric-value">{ans["posture"].upper()}</span>
+                </div>
+                <div class="metric-item">
+                    <span class="metric-label">Risk Level</span>
+                    <span class="metric-value {'indicator-high' if ans['riskLevel'] == 'CRITICAL' else 'indicator-medium'}">{ans["riskLevel"]}</span>
+                </div>
+                <div class="metric-item">
+                    <span class="metric-label">DIG Risk</span>
+                    <span class="metric-value">{ans["digRisk"]}</span>
+                </div>
+            </div>
+            <div style="font-size: 0.8rem; margin-bottom: 10px;">
+                <span class="metric-label">Primary Obstacle</span>
+                <p style="color: var(--text-secondary);">{ans['primaryObstacle']}</p>
+            </div>
+            <div style="font-size: 0.8rem;">
+                <span class="metric-label">Rewrite Directive</span>
+                <p style="color: var(--text-secondary);">{ans['rewriteDirective']}</p>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
         
-        st.markdown(f"**Primary Obstacle:**\n{ans['primaryObstacle']}")
-        st.markdown(f"**Rewrite Directive:**\n{ans['rewriteDirective']}")
-        
-        add_vertical_space(1)
-        st.divider()
-        st.markdown("### Justice Simulation")
+        # Justice Simulation Card
+        st.markdown("""
+        <div class="dashboard-card">
+            <h3 style="margin-top:0;">Justice Simulation</h3>
+        """, unsafe_allow_html=True)
         
         justice_ids = list(JUSTICES.keys())
         cols = st.columns(3)
@@ -330,53 +422,96 @@ def render_sidebar_dashboard(ans):
             col = cols[i % 3]
             if col.button(JUSTICES[jid]['name'].split()[-1], key=f"side_{jid}", use_container_width=True):
                 st.session_state.selected_justice = jid
+        
+        st.markdown("</div>", unsafe_allow_html=True)
 
 def render_welcome_screen():
-    st.markdown("<h1 style='text-align: center; margin-bottom: 0;'>SCOTUS Strategic Engine</h1>", unsafe_allow_html=True)
-    st.markdown("<p style='text-align: center; color: #94a3b8; letter-spacing: 0.1em; text-transform: uppercase; font-size: 0.8rem;'>Adversarial Appellate Strategy System</p>", unsafe_allow_html=True)
-    add_vertical_space(2)
+    # Logo and Hero
+    st.markdown("""
+    <div class="welcome-container">
+        <div class="logo-container">
+            <svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M40 10L10 25V55L40 70L70 55V25L40 10Z" stroke="currentColor" stroke-width="2" />
+                <path d="M40 10V70M10 25L70 55M70 25L10 55" stroke="currentColor" stroke-width="1" opacity="0.3" />
+                <circle cx="40" cy="40" r="12" stroke="currentColor" stroke-width="2" />
+                <circle cx="40" cy="40" r="4" fill="currentColor" />
+            </svg>
+        </div>
+        <h1 class="landing-title">SCOTUS Strategic Engine</h1>
+        <p class="landing-subtitle">Upload a cert petition, merits brief, or emergency application to begin adversarial analysis.</p>
+    </div>
+    """, unsafe_allow_html=True)
     
-    tab_paste, tab_upload, tab_sample = st.tabs(["Paste Text", "Upload PDF", "Sample Cases"])
-    
-    with tab_paste:
-        case_title = st.text_input("Case Title", placeholder="e.g., Louisiana v. Callais")
-        case_text = st.text_area("Case Materials", height=300, placeholder="Paste petition text, questions presented, or lower-court decision...")
-        if st.button("Begin Analysis", key="btn_paste", type="primary"):
-            if not case_text: st.error("Please provide case materials.")
-            else:
-                posture = detect_posture(case_text)
-                st.session_state.analysis = analyze_case_logic(case_text, case_title or "Untitled", posture, "")
-                st.session_state.case_text = case_text
-                st.rerun()
-                
-    with tab_upload:
-        uploaded_file = st.file_uploader("Choose a PDF file", type="pdf")
-        if uploaded_file:
-            if st.button("Extract and Analyze", type="primary"):
-                with st.spinner("Analyzing case materials..."):
-                    text = extract_pdf_text(uploaded_file)
-                    posture = detect_posture(text)
-                    st.session_state.analysis = analyze_case_logic(text, uploaded_file.name, posture, "")
-                    st.session_state.case_text = text
+    col_up1, col_up2, col_up3 = st.columns([1, 2, 1])
+    with col_up2:
+        tab_upload, tab_paste = st.tabs(["🚀 Upload Case Materials", "📝 Paste Text"])
+        
+        with tab_upload:
+            uploaded_file = st.file_uploader("Select PDF Case Materials", type="pdf", label_visibility="collapsed")
+            if uploaded_file:
+                if st.button("Extract and Analyze", type="primary", use_container_width=True):
+                    with st.spinner("Analyzing case materials..."):
+                        text = extract_pdf_text(uploaded_file)
+                        posture = detect_posture(text)
+                        st.session_state.analysis = analyze_case_logic(text, uploaded_file.name, posture, "")
+                        st.session_state.case_text = text
+                        st.rerun()
+
+        with tab_paste:
+            case_title = st.text_input("Case Title", placeholder="e.g., Louisiana v. Callais")
+            case_text = st.text_area("Case Materials", height=200, placeholder="Paste petition text, questions presented, or lower-court decision...")
+            if st.button("Begin Analysis", key="btn_paste", type="primary", use_container_width=True):
+                if not case_text: st.error("Please provide case materials.")
+                else:
+                    posture = detect_posture(case_text)
+                    st.session_state.analysis = analyze_case_logic(case_text, case_title or "Untitled", posture, "")
+                    st.session_state.case_text = case_text
                     st.rerun()
-                    
-    with tab_sample:
-        st.markdown("### Select a Landmark Case")
-        cols = st.columns(2)
-        for i, (name, data) in enumerate(SAMPLE_CASES.items()):
-            col = cols[i % 2]
-            with col:
-                st.markdown(f"""
-                <div class="sample-card">
-                    <span style='font-size: 0.7rem; color: #c9a227; font-weight: 700;'>{data['docket']}</span>
-                    <h4 style='margin: 5px 0;'>{name}</h4>
-                    <p style='font-size: 0.8rem; color: #94a3b8;'>{data['issue']}</p>
+
+    # Tier Information Boxes
+    st.markdown("""
+    <div style="display: flex; gap: 20px; justify-content: center; margin: 40px 0;">
+        <div style="text-align: left; background: var(--bg-card); padding: 15px; border-radius: 8px; border: 1px solid var(--border-subtle);">
+            <span style="color: var(--gold-primary); font-weight: 700; font-size: 0.7rem; text-transform: uppercase;">Tier A</span>
+            <p style="color: var(--text-tertiary); font-size: 0.8rem; margin: 0;">Full petition + Questions Presented + lower-court decision</p>
+        </div>
+        <div style="text-align: left; background: var(--bg-card); padding: 15px; border-radius: 8px; border: 1px solid var(--border-subtle);">
+            <span style="color: var(--gold-primary); font-weight: 700; font-size: 0.7rem; text-transform: uppercase;">Tier B</span>
+            <p style="color: var(--text-tertiary); font-size: 0.8rem; margin: 0;">Summaries, excerpts, docket information</p>
+        </div>
+        <div style="text-align: left; background: var(--bg-card); padding: 15px; border-radius: 8px; border: 1px solid var(--border-subtle);">
+            <span style="color: var(--gold-primary); font-weight: 700; font-size: 0.7rem; text-transform: uppercase;">Tier C</span>
+            <p style="color: var(--text-tertiary); font-size: 0.8rem; margin: 0;">Case name or docket number only</p>
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
+
+    # Sample Cases
+    st.markdown("<h3 style='text-align: center; margin-bottom: 20px;'>Or Start with a Sample Case</h3>", unsafe_allow_html=True)
+    
+    # We'll use Streamlit's container and columns but with custom HTML inside for the layout
+    sample_items = list(SAMPLE_CASES.items())
+    row1_cols = st.columns(2)
+    row2_cols = st.columns(2)
+    
+    all_cols = row1_cols + row2_cols
+    
+    for i, (name, data) in enumerate(sample_items):
+        with all_cols[i]:
+            st.markdown(f"""
+            <div class="sample-card-ui">
+                <div class="sample-header">
+                    <span class="sample-docket">{data['docket']}</span>
+                    <span class="sample-posture-badge">{data['posture']}</span>
                 </div>
-                """, unsafe_allow_html=True)
-                if st.button(f"Analyze {name.split()[-1]}", key=f"btn_sample_{i}"):
-                    st.session_state.analysis = analyze_case_logic(data['text'], name, data['posture'], data['docket'])
-                    st.session_state.case_text = data['text']
-                    st.rerun()
+                <div class="sample-name">{name}</div>
+                <div class="sample-issue-line">{data['issue']}</div>
+            </div>
+            """, unsafe_allow_html=True)
+            if st.button(f"Analyze {name.split()[-1]}", key=f"btn_samp_{i}", use_container_width=True):
+                st.session_state.analysis = analyze_case_logic(data['text'], name, data['posture'], data['docket'])
+                st.session_state.case_text = data['text']
+                st.rerun()
 
 def render_analysis_dashboard():
     ans = st.session_state.analysis
@@ -387,16 +522,27 @@ def render_analysis_dashboard():
     col_left, col_right = st.columns([3, 2])
     
     with col_left:
-        st.markdown("### Case Materials")
-        st.markdown(f'<div class="brief-viewer">{st.session_state.case_text}</div>', unsafe_allow_html=True)
+        st.markdown(f"""
+        <div class="dashboard-card" style="height: 100%;">
+            <h3 style="margin-top:0;">Case Materials</h3>
+            <div style="background: white; color: #2e3338; padding: 30px; border-radius: 8px; font-family: 'Playfair Display', serif; line-height: 1.7; font-size: 1.1rem; max-height: 800px; overflow-y: auto; border-left: 8px solid var(--gold-primary);">
+                {st.session_state.case_text}
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
         
     with col_right:
-        st.markdown("### Strategy Overview")
+        # Strategy Overview Card
+        st.markdown("""
+        <div class="dashboard-card">
+            <h3 style="margin-top:0;">Strategy Overview</h3>
+        """, unsafe_allow_html=True)
+        
         with st.container():
             st.markdown("#### Relevant Precedents")
             for prec in ans['precedents']:
                 st.markdown(f"**{prec['case']}**")
-                st.markdown(f"<span style='font-size: 0.85rem; color: #94a3b8; font-style: italic;'>{prec['holding']}</span>", unsafe_allow_html=True)
+                st.markdown(f"<span style='font-size: 0.85rem; color: var(--text-secondary); font-style: italic;'>{prec['holding']}</span>", unsafe_allow_html=True)
             
             add_vertical_space(1)
             st.markdown("#### Strategic Traps & Counters")
@@ -412,17 +558,20 @@ def render_analysis_dashboard():
             
             add_vertical_space(1)
             st.markdown("#### Strategic Risk Matrix")
+            # Using custom HTML for the risk matrix rows to match the dashboard style
             for r in ans['risks']:
                 color = "#22c55e" if r['level'] == 'low' else "#f59e0b" if r['level'] == 'medium' else "#ef4444"
                 st.markdown(f"""
-                <div style='margin-bottom: 8px;'>
-                    <div style='display: flex; justify-content: space-between; font-size: 0.8rem;'>
+                <div style='margin-bottom: 12px; background: var(--bg-secondary); padding: 10px; border-radius: 6px;'>
+                    <div style='display: flex; justify-content: space-between; font-size: 0.85rem;'>
                         <span>{r['category']}</span>
                         <span style='color: {color}; font-weight: 700;'>{r['level'].upper()}</span>
                     </div>
-                    <div style='font-size: 0.7rem; color: #94a3b8;'>{r['confidence']}</div>
+                    <div style='font-size: 0.75rem; color: var(--text-tertiary);'>{r['confidence']}</div>
                 </div>
                 """, unsafe_allow_html=True)
+        
+        st.markdown("</div>", unsafe_allow_html=True)
 
     # Justice Spotlight
     if 'selected_justice' in st.session_state:
