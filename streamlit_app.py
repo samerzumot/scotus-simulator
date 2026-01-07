@@ -265,7 +265,6 @@ st.markdown("""
     @keyframes spin { 100% { transform: rotate(360deg); } }
 </style>
 """, unsafe_allow_html=True)
-""", unsafe_allow_html=True)
 
 # ========================================
 # Data Definitions (Ported from app.js / backend.py)
