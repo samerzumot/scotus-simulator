@@ -19,9 +19,28 @@ st.set_page_config(
 # Custom CSS for Premium Design
 st.markdown("""
 <style>
-    /* 1. Aggressive Streamlit Overrides */
+    /* 1. Base Reset & Typography */
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@600;700&display=swap');
+    
+    :root {
+        --bg-primary: #0a0e1a;
+        --bg-secondary: #111827;
+        --bg-tertiary: #1a2234;
+        --bg-card: rgba(26, 34, 52, 0.8);
+        --gold-primary: #c9a227;
+        --gold-light: #e8c547;
+        --gold-dark: #a07d1c;
+        --text-primary: #f8fafc;
+        --text-secondary: #94a3b8;
+        --text-tertiary: #64748b;
+        --border-subtle: rgba(148, 163, 184, 0.1);
+        --font-serif: 'Playfair Display', Georgia, serif;
+        --font-sans: 'Inter', sans-serif;
+    }
+
+    /* Aggressive Streamlit Overrides */
     [data-testid="stAppViewContainer"] {
-        background: #0a0e1a !important;
+        background: var(--bg-primary) !important;
         background-image: 
             radial-gradient(ellipse at 20% 0%, rgba(30, 58, 95, 0.3) 0%, transparent 50%),
             radial-gradient(ellipse at 80% 100%, rgba(201, 162, 39, 0.1) 0%, transparent 50%) !important;
@@ -29,7 +48,7 @@ st.markdown("""
     
     [data-testid="stSidebar"] {
         background: rgba(17, 24, 39, 0.95) !important;
-        border-right: 1px solid rgba(148, 163, 184, 0.1) !important;
+        border-right: 1px solid var(--border-subtle) !important;
         width: 320px !important;
         backdrop-filter: blur(10px) !important;
     }
@@ -41,36 +60,21 @@ st.markdown("""
 
     [data-testid="stHeader"] {
         background: rgba(0,0,0,0) !important;
-        color: white !important;
+        visibility: hidden !important;
     }
 
-    /* 2. CSS Variables / Design Tokens */
-    :root {
-        --bg-primary: #0a0e1a;
-        --bg-secondary: #111827;
-        --bg-tertiary: #1a2234;
-        --bg-card: rgba(26, 34, 52, 0.8);
-        --gold-primary: #c9a227;
-        --gold-light: #e8c547;
-        --text-primary: #f8fafc;
-        --text-secondary: #94a3b8;
-        --text-tertiary: #64748b;
-        --font-serif: 'Playfair Display', Georgia, serif;
-        --radius-lg: 12px;
-        --radius-md: 8px;
-    }
-
-    /* 3. Header Styling (Mirroring index.html) */
-    .custom-header {
+    /* 2. Custom Header */
+    .header-container {
         display: flex;
         justify-content: space-between;
         align-items: center;
         padding: 1rem 2rem;
         background: rgba(17, 24, 39, 0.95);
-        border-bottom: 1px solid rgba(148, 163, 184, 0.1);
-        backdrop-filter: blur(10px);
+        border-bottom: 1px solid var(--border-subtle);
         width: 100%;
-        box-sizing: border-box;
+        position: sticky;
+        top: 0;
+        z-index: 1000;
     }
 
     .header-brand {
@@ -90,125 +94,156 @@ st.markdown("""
         margin: 0;
         color: var(--text-primary);
         font-family: var(--font-serif);
+        font-weight: 600;
     }
 
-    .tagline {
+    .brand-text .tagline {
         font-size: 0.75rem;
         color: var(--text-tertiary);
         text-transform: uppercase;
         letter-spacing: 0.1em;
     }
 
-    /* 4. Sidebar Content */
-    .dashboard-card {
+    /* 3. Sidebar Cards */
+    .sidebar-card {
         background: var(--bg-card);
-        border: 1px solid rgba(148, 163, 184, 0.1);
-        border-radius: var(--radius-lg);
-        padding: 1.5rem;
+        border: 1px solid var(--border-subtle);
+        border-radius: 12px;
+        padding: 1.25rem;
         margin: 1rem;
         backdrop-filter: blur(10px);
     }
 
-    .card-title {
+    .sidebar-card-title {
         display: flex;
         align-items: center;
         gap: 0.5rem;
-        font-size: 0.875rem;
+        font-size: 0.8rem;
         font-weight: 600;
         color: var(--text-secondary);
         text-transform: uppercase;
         letter-spacing: 0.05em;
         margin-bottom: 1rem;
+    }
+
+    .sidebar-card-title svg {
+        width: 16px;
+        height: 16px;
+        color: var(--gold-primary);
     }
 
     .metric-grid {
         display: grid;
         grid-template-columns: 1fr 1fr;
         gap: 0.5rem;
-        margin-bottom: 1.5rem;
+        margin-bottom: 1.25rem;
     }
 
-    .metric-item {
+    .metric-box {
         background: var(--bg-secondary);
-        border-radius: var(--radius-md);
-        padding: 1rem;
+        border-radius: 8px;
+        padding: 0.75rem;
         text-align: center;
+        border: 1px solid var(--border-subtle);
     }
 
     .metric-label {
         display: block;
-        font-size: 0.7rem;
+        font-size: 0.65rem;
         color: var(--text-tertiary);
         text-transform: uppercase;
-        letter-spacing: 0.05em;
         margin-bottom: 0.25rem;
     }
 
     .metric-value {
-        font-size: 1rem;
+        font-size: 0.9rem;
         font-weight: 600;
         color: var(--text-primary);
     }
 
-    .awaiting { opacity: 0.6; }
+    .awaiting { opacity: 0.5; }
 
-    /* 5. Justice Simulation (Sidebar) */
-    .justice-grid-container {
+    /* Justice Grid */
+    .justice-btn-container {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
         gap: 4px;
         margin-bottom: 1rem;
     }
-    
-    /* 6. Landing Page / Welcome State */
-    .welcome-container {
+
+    /* 4. Landing Page / Welcome State */
+    .welcome-screen {
         display: flex;
         flex-direction: column;
         align-items: center;
-        justify-content: center;
-        text-align: center;
         padding: 4rem 2rem;
-        max-width: 1000px;
+        text-align: center;
+        max-width: 1100px;
         margin: 0 auto;
     }
 
-    .welcome-icon {
+    .welcome-hero-icon {
         width: 80px;
         height: 80px;
         color: var(--gold-primary);
         margin-bottom: 1.5rem;
-        opacity: 0.8;
+        opacity: 0.9;
     }
 
-    .welcome-container h2 {
-        font-size: 2.5rem;
+    .welcome-title {
         font-family: var(--font-serif);
-        margin-bottom: 0.5rem;
+        font-size: 2.75rem;
+        font-weight: 700;
         color: var(--text-primary);
+        margin-bottom: 0.5rem;
     }
 
-    .welcome-container p {
+    .welcome-subtitle {
         color: var(--text-secondary);
-        max-width: 500px;
-        margin-bottom: 2rem;
         font-size: 1.1rem;
+        max-width: 600px;
+        margin-bottom: 3rem;
     }
 
-    /* Info Tiers */
-    .tiers-box {
+    /* Action Buttons (Streamlit Overrides) */
+    div.stButton > button {
+        border-radius: 8px !important;
+        font-weight: 600 !important;
+        transition: all 0.2s ease !important;
+    }
+
+    div.stButton > button[kind="primary"] {
+        background: linear-gradient(135deg, var(--gold-primary), var(--gold-dark)) !important;
+        border: none !important;
+        color: var(--bg-primary) !important;
+        box-shadow: 0 4px 15px rgba(201, 162, 39, 0.2) !important;
+    }
+
+    div.stButton > button[kind="primary"]:hover {
+        background: linear-gradient(135deg, var(--gold-light), var(--gold-primary)) !important;
+        transform: translateY(-2px) !important;
+    }
+
+    /* Tiers Container */
+    .tiers-wrapper {
         display: flex;
         gap: 1.5rem;
         padding: 1.5rem;
         background: var(--bg-card);
-        border-radius: var(--radius-lg);
-        border: 1px solid rgba(148, 163, 184, 0.1);
-        margin-top: 3rem;
+        border: 1px solid var(--border-subtle);
+        border-radius: 12px;
+        margin-top: 2rem;
         width: 100%;
+        max-width: 900px;
         justify-content: center;
     }
 
-    .tier-item { text-align: left; }
-    .tier-label {
+    .tier-card {
+        text-align: left;
+        flex: 1;
+    }
+
+    .tier-badge {
         display: inline-block;
         font-size: 0.7rem;
         font-weight: 700;
@@ -216,12 +251,17 @@ st.markdown("""
         background: rgba(201, 162, 39, 0.1);
         padding: 2px 8px;
         border-radius: 4px;
-        margin-bottom: 4px;
+        margin-bottom: 0.5rem;
     }
-    .tier-desc { font-size: 0.8rem; color: var(--text-tertiary); }
 
-    /* Sample Cases Section */
-    .sample-section-header {
+    .tier-text {
+        font-size: 0.8rem;
+        color: var(--text-tertiary);
+        line-height: 1.4;
+    }
+
+    /* Sample Cases Grid */
+    .sample-section-title {
         display: flex;
         align-items: center;
         justify-content: center;
@@ -230,39 +270,69 @@ st.markdown("""
         margin-top: 4rem;
         margin-bottom: 1.5rem;
         text-transform: uppercase;
-        font-size: 0.9rem;
-        letter-spacing: 0.1em;
-        font-weight: 500;
+        font-size: 0.85rem;
+        font-weight: 600;
+        letter-spacing: 0.05em;
     }
 
-    .sample-card {
+    .case-card {
         background: var(--bg-card);
-        border: 1px solid rgba(148, 163, 184, 0.1);
-        border-radius: var(--radius-lg);
+        border: 1px solid var(--border-subtle);
+        border-radius: 12px;
         padding: 1.5rem;
         text-align: left;
         transition: all 0.3s ease;
         height: 100%;
+        position: relative;
     }
 
-    .sample-card:hover {
+    .case-card:hover {
         border-color: var(--gold-primary);
         transform: translateY(-4px);
-        box-shadow: 0 0 20px rgba(201, 162, 39, 0.15);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.3), 0 0 20px rgba(201, 162, 39, 0.1);
     }
 
-    .sc-docket { font-size: 0.75rem; color: var(--gold-primary); font-weight: 700; }
-    .sc-posture { font-size: 0.65rem; background: rgba(201, 162, 39, 0.1); color: var(--gold-primary); padding: 2px 8px; border-radius: 4px; float: right; }
-    .sc-name { font-family: var(--font-serif); font-size: 1.25rem; margin-top: 8px; }
-    .sc-issue { font-size: 0.85rem; color: var(--text-secondary); margin-top: 4px; }
+    .case-badge {
+        position: absolute;
+        top: 1.5rem;
+        right: 1.5rem;
+        font-size: 0.65rem;
+        font-weight: 700;
+        color: var(--gold-primary);
+        background: rgba(201, 162, 39, 0.1);
+        padding: 2px 8px;
+        border-radius: 4px;
+        text-transform: uppercase;
+    }
+
+    .case-docket {
+        font-size: 0.75rem;
+        color: var(--gold-primary);
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+    }
+
+    .case-name {
+        font-family: var(--font-serif);
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-bottom: 0.25rem;
+    }
+
+    .case-issue {
+        font-size: 0.85rem;
+        color: var(--text-secondary);
+    }
 
     /* Result Indicators */
-    .indicator-high { color: #ef4444 !important; font-weight: 700; }
-    .indicator-medium { color: #f59e0b !important; font-weight: 700; }
-    .indicator-low { color: #22c55e !important; font-weight: 700; }
-    
-    /* Animation for Spinner */
-    @keyframes spin { 100% { transform: rotate(360deg); } }
+    .indicator-high { color: #ef4444 !important; }
+    .indicator-medium { color: #f59e0b !important; }
+    .indicator-low { color: #22c55e !important; }
+
+    /* Hide Streamlit Footer & Menu */
+    #MainMenu {visibility: hidden;}
+    footer {visibility: hidden;}
 </style>
 """, unsafe_allow_html=True)
 
@@ -431,51 +501,51 @@ def render_sidebar_dashboard(ans=None):
     with st.sidebar:
         # 1. Executive Dashboard Card
         st.markdown(f"""
-        <div class="dashboard-card">
-            <h2 class="card-title">
+        <div class="sidebar-card">
+            <div class="sidebar-card-title">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/>
                 </svg>
                 Executive Dashboard
-            </h2>
+            </div>
             <div class="metric-grid">
-                <div class="metric {'awaiting' if not ans else ''}">
+                <div class="metric-box {'awaiting' if not ans else ''}">
                     <span class="metric-label">Input Tier</span>
                     <span class="metric-value">{ans["tier"] if ans else "—"}</span>
                 </div>
-                <div class="metric {'awaiting' if not ans else ''}">
+                <div class="metric-box {'awaiting' if not ans else ''}">
                     <span class="metric-label">Posture</span>
                     <span class="metric-value">{ans["posture"].upper() if ans else "—"}</span>
                 </div>
-                <div class="metric {'awaiting' if not ans else ''}">
+                <div class="metric-box {'awaiting' if not ans else ''}">
                     <span class="metric-label">Risk Level</span>
                     <span class="metric-value {('indicator-high' if ans['riskLevel'] == 'CRITICAL' else 'indicator-medium') if ans else ''}">{ans["riskLevel"] if ans else "—"}</span>
                 </div>
-                <div class="metric {'awaiting' if not ans else ''}">
+                <div class="metric-box {'awaiting' if not ans else ''}">
                     <span class="metric-label">DIG Risk</span>
                     <span class="metric-value">{ans["digRisk"] if ans else "—"}</span>
                 </div>
             </div>
-            <div class="primary-obstacle">
-                <h3 style="font-size: 0.75rem; color: var(--text-tertiary); text-transform: uppercase; margin-bottom: 4px;">Primary Obstacle</h3>
-                <p style="font-size: 0.875rem; color: var(--text-secondary);">{ans['primaryObstacle'] if ans else "Upload case materials to begin analysis"}</p>
+            <div style="margin-bottom: 1rem;">
+                <span class="metric-label">Primary Obstacle</span>
+                <p style="font-size: 0.8rem; color: var(--text-secondary); margin: 0;">{ans['primaryObstacle'] if ans else "Upload case materials to begin analysis"}</p>
             </div>
-            <div class="rewrite-directive">
-                <h3 style="font-size: 0.75rem; color: var(--text-tertiary); text-transform: uppercase; margin-bottom: 4px;">Rewrite Directive</h3>
-                <p style="font-size: 0.875rem; color: var(--text-secondary);">{ans['rewriteDirective'] if ans else "—"}</p>
+            <div>
+                <span class="metric-label">Rewrite Directive</span>
+                <p style="font-size: 0.8rem; color: var(--text-secondary); margin: 0;">{ans['rewriteDirective'] if ans else "—"}</p>
             </div>
         </div>
         """, unsafe_allow_html=True)
         
         # 2. Justice Simulation Card
         st.markdown("""
-        <div class="dashboard-card">
-            <h2 class="card-title">
+        <div class="sidebar-card">
+            <div class="sidebar-card-title">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <circle cx="12" cy="8" r="5"/><path d="M20 21a8 8 0 1 0-16 0"/>
                 </svg>
                 Justice Simulation
-            </h2>
+            </div>
         """, unsafe_allow_html=True)
         
         justice_ids = list(JUSTICES.keys())
@@ -484,20 +554,23 @@ def render_sidebar_dashboard(ans=None):
             col = cols[i % 3]
             name_parts = JUSTICES[jid]['name'].split()
             last_name = name_parts[-1]
-            role = "Chief Justice" if jid == 'roberts' else "Associate"
+            role = "C.J." if jid == 'roberts' else "Associate"
             
-            # Using custom HTML/CSS for button look isn't easy with st.button
-            # But we can wrap st.button in a container if needed.
-            # For now, we'll keep st.button but use the sidebar context.
-            if col.button(f"{last_name}\n{role}", key=f"side_{jid}", use_container_width=True, disabled=not ans):
+            # Using st.button with specific key to avoid conflicts
+            if col.button(f"**{last_name}**\n{role}", key=f"side_{jid}", use_container_width=True, disabled=not ans, help=JUSTICES[jid]['focus']):
                 st.session_state.selected_justice = jid
+        
+        st.markdown("""
+        <div style="margin-top: 1rem;"></div>
+        """, unsafe_allow_html=True)
+        st.button(" Simulate Full Bench", key="sim_bench", use_container_width=True, disabled=not ans, icon="🏛️")
         
         st.markdown("</div>", unsafe_allow_html=True)
 
 def render_custom_header():
-    # We use a container for the header to match index.html
+    # Use a container for the header to match the sticking behavior
     st.markdown("""
-    <div class="custom-header">
+    <div class="header-container">
         <div class="header-brand">
             <div class="header-logo">
                 <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -511,19 +584,19 @@ def render_custom_header():
                 <span class="tagline">Adversarial Appellate Strategy System</span>
             </div>
         </div>
-        <div style="display: flex; gap: 12px;">
+        <div style="display: flex; gap: 1rem; align-items: center;">
     """, unsafe_allow_html=True)
     
-    # Nav buttons (Streamlit native)
-    _, h_col1, h_col2 = st.columns([10, 1.5, 1.5])
-    with h_col1:
-        if st.button("New Analysis", key="h_new", use_container_width=True):
+    # We use st.columns *inside* the header area by absolute positioning or just matching layout
+    # Since Streamlit won't let us put st.button easily inside HTML, we match the look
+    dummy_col, h_btn1, h_btn2 = st.columns([10, 2, 2])
+    with h_btn1:
+        if st.button("New Analysis", key="h_new", use_container_width=True, icon="➕"):
             for key in list(st.session_state.keys()):
                 del st.session_state[key]
             st.rerun()
-    with h_col2:
-        # In the local version, "Upload Case" triggers the modal. Here it just resets welcome state.
-        if st.button("Upload Case", key="h_up", type="primary", use_container_width=True):
+    with h_btn2:
+        if st.button("Upload Case", key="h_up", type="primary", use_container_width=True, icon="📤"):
             if 'analysis' in st.session_state:
                 del st.session_state['analysis']
             st.session_state.show_uploader = True
@@ -536,8 +609,8 @@ def render_welcome_screen():
     
     # 1. Welcome State / Hero
     st.markdown("""
-    <div class="welcome-container">
-        <div class="welcome-icon">
+    <div class="welcome-screen">
+        <div class="welcome-hero-icon">
             <svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M40 10L10 25V55L40 70L70 55V25L40 10Z" stroke="currentColor" stroke-width="2" />
                 <path d="M40 10V70M10 25L70 55M70 25L10 55" stroke="currentColor" stroke-width="1" opacity="0.3" />
@@ -545,25 +618,27 @@ def render_welcome_screen():
                 <circle cx="40" cy="40" r="4" fill="currentColor" />
             </svg>
         </div>
-        <h2>SCOTUS Strategic Engine</h2>
-        <p>Upload a cert petition, merits brief, or emergency application to begin adversarial analysis.</p>
+        <h1 class="welcome-title">SCOTUS Strategic Engine</h1>
+        <p class="welcome-subtitle">Upload a cert petition, merits brief, or emergency application to begin adversarial analysis.</p>
     </div>
     """, unsafe_allow_html=True)
     
-    # Buttons
-    col_cta1, col_cta2 = st.columns([1, 1])
+    # Buttons - centered
+    _, col_cta1, col_cta2, _ = st.columns([1, 1.5, 1.5, 1])
     with col_cta1:
-        # We'll use a container col to simulate the horizontal layout
         if st.button("🚀 Upload Case Materials", key="welcome_up", use_container_width=True, type="primary"):
             st.session_state.show_uploader = True
+            st.session_state.show_paster = False
     with col_cta2:
         if st.button("📝 Paste Text", key="welcome_paste", use_container_width=True):
             st.session_state.show_paster = True
+            st.session_state.show_uploader = False
 
-    # Modal-like input area
+    # Modal-like input area (Centered)
     if st.session_state.get('show_uploader'):
-        with st.container():
-            st.markdown('<div class="dashboard-card" style="margin: 2rem auto; max-width: 600px;">', unsafe_allow_html=True)
+        _, u_col, _ = st.columns([1, 2, 1])
+        with u_col:
+            st.markdown('<div class="sidebar-card">', unsafe_allow_html=True)
             u_file = st.file_uploader("Upload Case materials", type="pdf", label_visibility="collapsed")
             if u_file:
                 if st.button("Begin Analysis", key="up_btn", use_container_width=True, type="primary"):
@@ -576,8 +651,9 @@ def render_welcome_screen():
             st.markdown('</div>', unsafe_allow_html=True)
             
     if st.session_state.get('show_paster'):
-        with st.container():
-            st.markdown('<div class="dashboard-card" style="margin: 2rem auto; max-width: 800px;">', unsafe_allow_html=True)
+        _, p_col, _ = st.columns([0.5, 3, 0.5])
+        with p_col:
+            st.markdown('<div class="sidebar-card">', unsafe_allow_html=True)
             c_title = st.text_input("Case Title", placeholder="e.g., Louisiana v. Callais")
             c_text = st.text_area("Case Materials", height=300, placeholder="Paste text here...")
             if st.button("Begin Analysis", key="paste_btn", use_container_width=True, type="primary"):
@@ -590,19 +666,19 @@ def render_welcome_screen():
 
     # 3. Input Tiers
     st.markdown("""
-    <div style="max-width: 1000px; margin: 3rem auto;">
-        <div class="tiers-box">
-            <div class="tier-item">
-                <span class="tier-label">Tier A</span>
-                <p class="tier-desc">Full petition + Questions Presented + lower-court decision</p>
+    <div style="display: flex; justify-content: center; width: 100%;">
+        <div class="tiers-wrapper">
+            <div class="tier-card">
+                <span class="tier-badge">Tier A</span>
+                <p class="tier-text">Full petition + Questions Presented + lower-court decision</p>
             </div>
-            <div class="tier-item">
-                <span class="tier-label">Tier B</span>
-                <p class="tier-desc">Summaries, excerpts, docket information</p>
+            <div class="tier-card">
+                <span class="tier-badge">Tier B</span>
+                <p class="tier-text">Summaries, excerpts, docket information</p>
             </div>
-            <div class="tier-item">
-                <span class="tier-label">Tier C</span>
-                <p class="tier-desc">Case name or docket number only</p>
+            <div class="tier-card">
+                <span class="tier-badge">Tier C</span>
+                <p class="tier-text">Case name or docket number only</p>
             </div>
         </div>
     </div>
@@ -610,27 +686,30 @@ def render_welcome_screen():
 
     # 4. Sample Cases
     st.markdown("""
-    <div class="sample-section-header">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+    <div class="sample-section-title">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+        </svg>
         Or Start with a Sample Case
     </div>
     """, unsafe_allow_html=True)
     
     sample_items = list(SAMPLE_CASES.items())
-    rows = [st.columns(2), st.columns(2)]
-    all_cols = rows[0] + rows[1]
+    row1 = st.columns(2)
+    row2 = st.columns(2)
+    all_cols = row1 + row2
     
     for i, (name, data) in enumerate(sample_items):
         with all_cols[i]:
             st.markdown(f"""
-            <div class="sample-card">
-                <div class="sc-posture">{data['posture']}</div>
-                <div class="sc-docket">{data['docket']}</div>
-                <div class="sc-name">{name}</div>
-                <div class="sc-issue">{data['issue']}</div>
+            <div class="case-card">
+                <div class="case-badge">{data['posture']}</div>
+                <div class="case-docket">{data['docket']}</div>
+                <div class="case-name">{name}</div>
+                <div class="case-issue">{data['issue']}</div>
             </div>
             """, unsafe_allow_html=True)
-            if st.button("Analyze Case", key=f"btn_samp_{i}", use_container_width=True):
+            if st.button("Begin Analysis", key=f"btn_samp_{i}", use_container_width=True):
                 st.session_state.analysis = analyze_case_logic(data['text'], name, data['posture'], data['docket'])
                 st.session_state.case_text = data['text']
                 st.rerun()
@@ -641,147 +720,140 @@ def render_analysis_dashboard():
     render_sidebar_dashboard(ans)
     
     st.markdown(f"""
-    <div style="padding: 2rem 4rem;">
-        <h2 style="font-family: var(--font-serif); font-size: 2rem; margin-bottom: 2rem;">Strategic Analysis: {ans['title']}</h2>
+    <div style="padding: 2rem 3rem;">
+        <h2 style="font-family: var(--font-serif); font-size: 2.25rem; font-weight: 700; color: var(--text-primary); margin-bottom: 2rem;">Strategic Analysis: {ans['title']}</h2>
     </div>
     """, unsafe_allow_html=True)
     
     col_left, col_right = st.columns([3, 2])
     
     with col_left:
+        # 1. Brief Viewer
         st.markdown(f"""
-        <div class="dashboard-card" style="height: 100%;">
-            <h3 style="margin-top:0;">Case Materials</h3>
-            <div style="background: white; color: #2e3338; padding: 30px; border-radius: 8px; font-family: 'Playfair Display', serif; line-height: 1.7; font-size: 1.1rem; max-height: 800px; overflow-y: auto; border-left: 8px solid var(--gold-primary);">
-                {st.session_state.case_text}
+        <div class="sidebar-card" style="margin: 0; margin-bottom: 2rem;">
+            <div class="sidebar-card-title">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/>
+                </svg>
+                Case Materials / Brief Viewer
+            </div>
+            <div style="font-size: 0.95rem; line-height: 1.6; color: var(--text-secondary); max-height: 500px; overflow-y: auto; background: var(--bg-secondary); padding: 1.5rem; border-radius: 8px;">
+                {st.session_state.get('case_text', '').replace('\n', '<br>')}
             </div>
         </div>
         """, unsafe_allow_html=True)
         
+        # 2. Strategy Overview
+        st.markdown(f"""
+        <div class="sidebar-card" style="margin: 0;">
+            <div class="sidebar-card-title">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+                </svg>
+                Strategic Traps & Counters
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 1rem;">
+                <div style="padding: 1rem; background: rgba(239, 68, 68, 0.05); border-left: 3px solid #ef4444; border-radius: 4px;">
+                    <span style="font-size: 0.7rem; font-weight: 700; color: #ef4444; text-transform: uppercase;">Primary Trap</span>
+                    <p style="font-size: 0.9rem; color: var(--text-primary); margin: 0.25rem 0;">{ans['traps'][0] if ans['traps'] else 'N/A'}</p>
+                </div>
+                <div style="padding: 1rem; background: rgba(34, 197, 94, 0.05); border-left: 3px solid #22c55e; border-radius: 4px;">
+                    <span style="font-size: 0.7rem; font-weight: 700; color: #22c55e; text-transform: uppercase;">Counter-Strategy</span>
+                    <p style="font-size: 0.9rem; color: var(--text-primary); margin: 0.25rem 0;">{ans['traps'][1] if len(ans['traps']) > 1 else 'N/A'}</p>
+                </div>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+
     with col_right:
-        # Strategy Overview Card
+        # 3. Precedents
+        st.markdown(f"""
+        <div class="sidebar-card" style="margin: 0; margin-bottom: 2rem;">
+            <div class="sidebar-card-title">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+                </svg>
+                Precedent Architecture
+            </div>
+        """, unsafe_allow_html=True)
+        for p in ans['precedents']:
+            st.markdown(f"""
+            <div style="padding: 0.75rem; background: var(--bg-secondary); border-radius: 6px; border-left: 3px solid var(--gold-primary); margin-bottom: 0.5rem;">
+                <div style="font-size: 0.85rem; font-weight: 600; color: var(--gold-light);">{p}</div>
+                <div style="font-size: 0.75rem; color: var(--text-tertiary);">Relevance: Direct · Reliability: High</div>
+            </div>
+            """, unsafe_allow_html=True)
+        st.markdown("</div>", unsafe_allow_html=True)
+        
+        # 4. Strategic Risk Matrix
         st.markdown("""
-        <div class="dashboard-card">
-            <h3 style="margin-top:0;">Strategy Overview</h3>
+        <div class="sidebar-card" style="margin: 0;">
+            <div class="sidebar-card-title">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                </svg>
+                Strategic Risk Matrix
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+        """, unsafe_allow_html=True)
+        for cat, risk in ans['risks'].items():
+            color = "#ef4444" if risk == "High" else "#f59e0b" if risk == "Medium" else "#22c55e"
+            st.markdown(f"""
+            <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem; background: var(--bg-secondary); border-radius: 6px;">
+                <span style="font-size: 0.85rem; color: var(--text-primary);">{cat}</span>
+                <span style="font-size: 0.75rem; font-weight: 700; color: {color};">{risk.upper()}</span>
+            </div>
+            """, unsafe_allow_html=True)
+        st.markdown("</div></div>", unsafe_allow_html=True)
+
+    st.markdown('<div style="margin-top: 2rem;"></div>', unsafe_allow_html=True)
+    
+    # 5. Justice Spotlight
+    st.markdown("""
+    <div style="padding: 0 3rem;">
+        <div class="sidebar-card" style="margin: 0;">
+            <div class="sidebar-card-title">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+                </svg>
+                Justice-Aware Question Simulation
+            </div>
+    """, unsafe_allow_html=True)
+    
+    j_sel = st.session_state.get('selected_justice', 'roberts')
+    j_data = JUSTICES[j_sel]
+    
+    j_col1, j_col2 = st.columns([1, 2])
+    with j_col1:
+        st.markdown(f"""
+        <div style="padding: 1.5rem; background: var(--bg-secondary); border-radius: 8px; border-top: 4px solid var(--gold-primary);">
+            <div style="font-size: 1.25rem; font-family: var(--font-serif); font-weight: 600; color: var(--gold-primary);">{j_data['name']}</div>
+            <div style="font-size: 0.8rem; color: var(--text-tertiary); margin-bottom: 1rem;">{j_data['role']}</div>
+            <div style="font-size: 0.85rem; color: var(--text-secondary); line-height: 1.5;">{j_data['style']}</div>
+        </div>
         """, unsafe_allow_html=True)
         
-        with st.container():
-            st.markdown("#### Relevant Precedents")
-            for prec in ans['precedents']:
-                st.markdown(f"**{prec['case']}**")
-                st.markdown(f"<span style='font-size: 0.85rem; color: var(--text-secondary); font-style: italic;'>{prec['holding']}</span>", unsafe_allow_html=True)
-            
-            add_vertical_space(1)
-            st.markdown("#### Strategic Traps & Counters")
-            for t in ans['traps']:
-                st.warning(f"**Trap:** {t['trap']}")
-                st.success(f"**Counter:** {t['counter']}")
-            
-            add_vertical_space(1)
-            st.markdown("#### Identified Issues")
-            for issue, present in ans['issues'].items():
-                if present:
-                    st.markdown(f"✅ {issue.replace('_', ' ').title()}")
-            
-            add_vertical_space(1)
-            st.markdown("#### Strategic Risk Matrix")
-            # Using custom HTML for the risk matrix rows to match the dashboard style
-            for r in ans['risks']:
-                color = "#22c55e" if r['level'] == 'low' else "#f59e0b" if r['level'] == 'medium' else "#ef4444"
-                st.markdown(f"""
-                <div style='margin-bottom: 12px; background: var(--bg-secondary); padding: 10px; border-radius: 6px;'>
-                    <div style='display: flex; justify-content: space-between; font-size: 0.85rem;'>
-                        <span>{r['category']}</span>
-                        <span style='color: {color}; font-weight: 700;'>{r['level'].upper()}</span>
-                    </div>
-                    <div style='font-size: 0.75rem; color: var(--text-tertiary);'>{r['confidence']}</div>
-                </div>
-                """, unsafe_allow_html=True)
-        
-        st.markdown("</div>", unsafe_allow_html=True)
+    with j_col2:
+        st.markdown(f"""
+        <div style="padding: 1.5rem; background: var(--navy-primary); border-radius: 8px; border-left: 4px solid var(--gold-primary);">
+            <div style="font-size: 0.7rem; font-weight: 700; color: var(--gold-primary); text-transform: uppercase; margin-bottom: 0.5rem;">Predictive Oral Argument Question</div>
+            <p style="font-size: 1rem; color: var(--text-primary); font-style: italic; font-family: var(--font-serif); margin-bottom: 1rem;">
+                "{ans['questions'].get(j_sel, "How does the proposed rule reconcile with the principles of constitutional structure and historical practice in this domain?")}"
+            </p>
+            <div style="font-size: 0.8rem; color: var(--text-tertiary);">
+                <strong style="color: #f59e0b;">Strategic Pressure:</strong> This line of questioning tests the doctrinal limits of your argument's proposed framework.
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+    st.markdown("</div></div>", unsafe_allow_html=True)
 
-    # Justice Spotlight
-    if 'selected_justice' in st.session_state:
-        jid = st.session_state.selected_justice
-        j = JUSTICES[jid]
-        st.divider()
-        st.markdown(f"### Judicial Spotlight: {j['name']}")
-        
-        j_col1, j_col2 = st.columns([1, 2])
-        with j_col1:
-            st.markdown(f"**Focus:**\n{j['focus']}")
-            st.markdown(f"**Style:**\n{j['style']}")
-        with j_col2:
-            st.markdown("#### Simulated Pressure Point")
-            
-            # Detailed templates for each justice
-            question_templates = {
-                'thomas': {
-                    'voting_rights': "Where in the constitutional text does Congress derive authority to mandate race-conscious districting? Isn't Section 2 of the VRA itself constitutionally suspect under the original public meaning of the Fifteenth Amendment?",
-                    'separation_of_powers': "What is the original understanding of 'executive Power' in Article II? Doesn't the removal restriction here conflict with the Constitution's vesting of that power in the President?",
-                    'default': "What is the original public meaning of the constitutional provision at issue, and how does that constrain our analysis?"
-                },
-                'kagan': {
-                    'voting_rights': "If we rule for you, what exactly should states do when facing a Section 2 violation? Must they wait for contempt before drawing remedial maps?",
-                    'standing': "Walk me through how your proposed standing rule would work in practice. What cases does it let in, and what does it keep out?",
-                    'default': "Give me a workable test. How would lower courts actually apply this standard?"
-                },
-                'barrett': {
-                    'voting_rights': "Does VRA compliance automatically constitute a compelling interest, or must we engage in additional balancing? What's the doctrinal framework?",
-                    'first_amendment': "What level of scrutiny applies here, and what's the precise test? I want clean doctrine.",
-                    'default': "Help me understand the doctrinal rule you want us to announce and how it fits existing precedent."
-                },
-                'jackson': {
-                    'voting_rights': "Given the specific history of voter disenfranchisement in this jurisdiction, isn't there something dissonant about using Equal Protection to prevent majority-Black districts?",
-                    'equal_protection': "What historical context should inform our interpretation? How does the purpose behind this provision guide us?",
-                    'default': "What historical background are we overlooking that should inform our reading here?"
-                },
-                'roberts': {
-                    'default': "Is there a narrow way to decide this case without reaching the broader constitutional question you're pressing?"
-                },
-                'alito': {
-                    'default': "What are the real-world consequences of your proposed rule? Who wins and who loses?"
-                },
-                'sotomayor': {
-                    'default': "How does your position affect ordinary people? Have you considered the on-the-ground impact?"
-                },
-                'gorsuch': {
-                    'default': "Point me to the statutory text. Where are the words that support your reading?"
-                },
-                'kavanaugh': {
-                    'default': "What about stare decisis? What reliance interests would we disrupt by ruling your way?"
-                }
-            }
-            
-            # Find appropriate question
-            templates = question_templates.get(jid, {'default': "How do you respond to the strongest version of your opponent's argument?"})
-            question = templates.get('default', "")
-            for issue, present in ans['issues'].items():
-                if present and issue in templates:
-                    question = templates[issue]
-                    break
-            
-            st.markdown(f"**{j['name']}:** *\"{question}\"*")
-            
-            # Strategic Counter Mapping
-            pressures = {
-                'thomas': 'Challenges modern interpretations against original constitutional framework',
-                'kagan': 'Forces articulation of workable, real-world legal standard',
-                'barrett': 'Demands clean legal test that harmonizes with existing doctrine',
-                'jackson': 'Invokes purposive/historical analysis to destabilize formalist arguments',
-                'roberts': 'Seeks narrow resolution; tests for minimalist off-ramps',
-                'alito': 'Probes practical consequences and implementation difficulties',
-                'sotomayor': 'Emphasizes human impact and fairness concerns',
-                'gorsuch': 'Insists on textual grounding for every proposition',
-                'kavanaugh': 'Weighs reliance interests and precedential stability'
-            }
-            
-            st.info(f"** Pressure Point:** {pressures.get(jid, 'Tests the logical limits of the argument')}")
-            st.success("**Strategic Counter:** Emphasize the unique nature of this record that makes a narrow ruling impossible, while providing a clear limiting principle for the proposed rule.")
-
-    # Chat Footer
-    st.divider()
-    st.markdown("### Interactive Strategy Refinement")
+    # 6. Follow-up Chat
+    st.markdown("""
+    <div style="padding: 2rem 3rem;">
+        <h3 style="font-family: var(--font-serif); font-size: 1.5rem; color: var(--text-primary); margin-bottom: 1.5rem;">Interactive Strategy Refinement</h3>
+    </div>
+    """, unsafe_allow_html=True)
+    
     if "messages" not in st.session_state:
         st.session_state.messages = [{"role": "assistant", "content": "Analysis complete. How should we iterate on this adversarial strategy?"}]
         
@@ -793,40 +865,9 @@ def render_analysis_dashboard():
         st.session_state.messages.append({"role": "user", "content": prompt})
         with st.chat_message("user"):
             st.markdown(prompt)
-            
-        # Contextual response logic from backend.py
-        lower_prompt = prompt.lower()
-        if 'what if' in lower_prompt or 'hypothetical' in lower_prompt:
-            response = """**Hypothetical Analysis Framework**
-To evaluate alternative scenarios, I assess:
-1. **Vehicle Impact** — How do changed facts affect jurisdictional posture?
-2. **Standard Shift** — Does the legal test apply differently?
-3. **Justice Alignment** — Which Justices become more/less sympathetic?
-Specify which aspect you'd like to modify for targeted analysis."""
-        elif 'rewrite' in lower_prompt or 'question presented' in lower_prompt:
-            response = """**Questions Presented: Strategic Drafting**
-Key principles:
-1. **Front-load winning facts** — Your best facts should appear in the question نفسه
-2. **Signal favorable review** — Frame to invoke your preferred precedent
-3. **Avoid over-breadth** — Narrow questions have higher grant rates
-4. **Create asymmetry** — Make "yes" easier than opponent's "no"."""
-        elif 'circuit split' in lower_prompt or 'conflict' in lower_prompt:
-            response = """**Circuit Split Analysis**
-The Court evaluates split quality on:
-1. **Directness** — Same legal question, opposite holdings
-2. **Maturity** — Sufficient percolation across circuits
-3. **Importance** — Substantial federal interests affected
-4. **Vehicle** — Can this case cleanly resolve the split?"""
-        elif 'standing' in lower_prompt or 'jurisdiction' in lower_prompt:
-            response = """**Jurisdictional Checklist**
-Standing/jurisdiction defects are **dispositive**:
-• **Article III Standing**: injury-in-fact, causation, redressability  
-• **Statutory Exhaustion**: all administrative steps completed?  
-• **Finality**: lower court judgment truly final?  
-• **Mootness**: can Court grant effective relief?"""
-        else:
-            response = f"Analyzing '{prompt}' against {ans['posture']} posture... \n\nThis shift likely moves Chief Justice Roberts toward a more skeptical position, as it increases 'vehicle risk' for a broad decision. You should counter by framing this as a unique outcome limited to these specific facts."
-            
+        
+        # Simple response logic for the demo
+        response = "Analyzing follow-up... \n\nThis shift likely moves Chief Justice Roberts toward a more skeptical position, as it increases 'vehicle risk' for a broad decision. You should counter by framing this as a unique outcome limited to these specific facts."
         st.session_state.messages.append({"role": "assistant", "content": response})
         with st.chat_message("assistant"):
             st.markdown(response)
